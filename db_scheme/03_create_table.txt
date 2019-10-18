@@ -1,0 +1,42 @@
+\connect lib_sample lib_sample
+
+--
+-- ユニークID
+--
+CREATE TABLE unique_id (
+    unique_id       varchar(1024) PRIMARY KEY,
+    create_date     timestamptz NOT NULL DEFAULT now()
+) ;
+CREATE INDEX unique_id_create_date_idx ON unique_id(create_date) ;
+
+--
+-- サイトパラメータ
+--
+CREATE TABLE m_site_parameter (
+    insert_date                 timestamptz NOT NULL DEFAULT now(),
+    key                         text PRIMARY KEY,
+    value                       text NOT NULL
+) ;
+
+--
+-- 商品マスタ
+--
+CREATE TABLE m_item (
+    insert_date                 timestamptz NOT NULL DEFAULT now(),
+    item_id                     varchar(32) PRIMARY KEY,
+    title                       text NOT NULL,
+    description                 text NOT NULL,
+    author                      text NOT NULL,
+    price                       numeric NOT NULL,
+    is_delete                   boolean NOT NULL DEFAULT FALSE,
+    date_open                   timestamptz NOT NULL DEFAULT now(),
+    date_close                  timestamptz NOT NULL DEFAULT '2999-12-31 23:59:59'::timestamptz,
+    date_sale_start             timestamptz NOT NULL DEFAULT now(),
+    date_sale_end               timestamptz NOT NULL DEFAULT '2999-12-31 23:59:59'::timestamptz
+) ;
+CREATE INDEX m_item_title_idx           ON m_item(title);
+CREATE INDEX m_item_author_idx          ON m_item(author);
+CREATE INDEX m_item_price_idx           ON m_item(price) ;
+CREATE INDEX m_item_is_delete_idx       ON m_item(is_delete) ;
+CREATE INDEX m_item_date_sale_start_idx ON m_item(date_sale_start) ;
+

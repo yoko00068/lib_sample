@@ -1,0 +1,72 @@
+--
+-- ユニークな62進数文字列を返す
+-- usage: create_unique_id(桁数)
+--
+-- あらかじめunique_id テーブルが必要
+-- 失敗した場合はflaseを返す
+-- 有効な桁数をユニークな文字列で9割以上消費するとfalseの可能性
+--
+CREATE OR REPLACE FUNCTION create_unique_id(integer) RETURNS text AS $$
+DECLARE
+  rec RECORD ;
+  id text := '';
+  element text ;
+  p integer ;
+  length integer := $1 ;
+  is_natural_id boolean := FALSE ;
+BEGIN
+  element := '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ' ;
+  FOR i IN 1..100 LOOP
+    id := '' ;
+    FOR j IN 1..length LOOP
+     p := floor(random()*62)+1 ;
+     id := id || substring(element from p for 1) ;
+    END LOOP ;
+    SELECT INTO rec * FROM unique_id AS u WHERE u.unique_id = id ;
+    IF NOT FOUND THEN
+      INSERT INTO unique_id VALUES (id,now()) ;
+      is_natural_id = TRUE ;
+      EXIT ;
+    END IF ;
+  END LOOP ;
+
+  IF is_natural_id = TRUE THEN
+    RETURN id ;
+  ELSE
+    RETURN FALSE ;
+  END IF ;
+END ;
+$$ LANGUAGE plpgsql ;
+
+-- 数字版
+CREATE OR REPLACE FUNCTION create_unique_number(integer) RETURNS text AS $$
+DECLARE
+  rec RECORD ;
+  id text := '';
+  element text ;
+  p integer ;
+  length integer := $1 ;
+  is_natural_id boolean := FALSE ;
+BEGIN
+  element := '0123456789' ;
+  FOR i IN 1..100 LOOP
+    id := '' ;
+    FOR j IN 1..length LOOP
+     p := floor(random()*10)+1 ;
+     id := id || substring(element from p for 1) ;
+    END LOOP ;
+    SELECT INTO rec * FROM unique_id AS u WHERE u.unique_id = id ;
+    IF NOT FOUND THEN
+      INSERT INTO unique_id VALUES (id,now()) ;
+      is_natural_id = TRUE ;
+      EXIT ;
+    END IF ;
+  END LOOP ;
+
+  IF is_natural_id = TRUE THEN
+    RETURN id ;
+  ELSE
+    RETURN FALSE ;
+  END IF ;
+END ;
+$$ LANGUAGE plpgsql ;

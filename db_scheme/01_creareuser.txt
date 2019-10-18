@@ -1,0 +1,2 @@
+createuser --no-superuser --no-createdb --no-createrole -P lib_sample
+
