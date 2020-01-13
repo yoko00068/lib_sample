@@ -1,7 +1,7 @@
 <?php
 // lib_sample
 // テストコーディングです
-//
+// test
 require_once('include/init.php') ;
 $result = init_site() ;
 
