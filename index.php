@@ -3,6 +3,7 @@
 // テストコーディングです
 // test
 // test
+// test02
 require_once('include/init.php') ;
 $result = init_site() ;
 
